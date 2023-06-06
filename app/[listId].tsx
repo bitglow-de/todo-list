@@ -1,7 +1,7 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
+import { Text } from 'tamagui';
 import {
-  Text,
   TouchableOpacity,
   StyleSheet,
   View,
@@ -47,13 +47,14 @@ export default function Detail() {
   }
 
   const items = state[listId].data;
+  const headerTitle = state[listId].title;
   const listData = Object.keys(items).map<ListItem>((itemId) => items[itemId]);
 
   return (
     <>
       <Stack.Screen
         options={{
-          headerTitle: listId,
+          headerTitle,
           headerRight: renderAddButton,
         }}
       />

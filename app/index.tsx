@@ -1,7 +1,8 @@
 import React from 'react';
-import { FlatList, StyleSheet, View, Text } from 'react-native';
+import { FlatList, StyleSheet, View } from 'react-native';
 import { useList } from '../state/listContext';
 import ShoppingListRow from '../components/ShoppingListRow';
+import { H3 } from 'tamagui';
 
 export default function Home() {
   const [state] = useList();
@@ -12,9 +13,7 @@ export default function Home() {
       <FlatList
         data={listIds}
         contentContainerStyle={styles.list}
-        ListHeaderComponent={
-          <Text style={styles.title}>{'Todo List App 📝'}</Text>
-        }
+        ListHeaderComponent={<H3>{'Todo List App 📝'}</H3>}
         renderItem={({ item: listId, index }) => (
           <ShoppingListRow
             listId={listId}

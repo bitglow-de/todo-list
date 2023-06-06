@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Text } from 'tamagui';
 import Entypoicons from '@expo/vector-icons/Entypo';
 
 type Props = {
@@ -28,9 +29,9 @@ export default function ShoppingListRow({
         router.push({ pathname: listId });
       }}
     >
-      <Text style={styles.label}>{title}</Text>
+      <Text fontSize="$5">{title}</Text>
       <View style={styles.right}>
-        <Text style={styles.count}>{count}</Text>
+        <Text fontSize="$3">{count}</Text>
         <Entypoicons name="chevron-small-right" size={24} color={'gray'} />
       </View>
     </TouchableOpacity>
