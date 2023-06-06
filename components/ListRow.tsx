@@ -1,32 +1,28 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { ListItem } from '../state/listContext';
-import { Text } from 'tamagui';
-import { StyleSheet, View } from 'react-native';
+import { Text, YStack } from 'tamagui';
 
 type Props = {
   item: ListItem;
+  isFirst: boolean;
   isLast: boolean;
 };
 
-export default function ListRow({ item, isLast }: Props) {
-  const styles = useMemo(() => getStyles(isLast), [isLast]);
+export default function ListRow({ item, isFirst, isLast }: Props) {
+  const bottomBorderRadius = isLast ? 8 : undefined;
+  const topBorderRadius = isFirst ? 8 : undefined;
 
   return (
-    <View style={styles.container}>
+    <YStack
+      bc="$background"
+      px="$2.5"
+      py="$2"
+      bbrr={bottomBorderRadius}
+      bblr={bottomBorderRadius}
+      btlr={topBorderRadius}
+      btrr={topBorderRadius}
+    >
       <Text fontSize="$5">{item.title}</Text>
-    </View>
+    </YStack>
   );
 }
-
-const getStyles = (isLast: boolean) =>
-  StyleSheet.create({
-    container: {
-      paddingHorizontal: 10,
-      paddingVertical: 8,
-      borderBottomColor: 'silver',
-      borderBottomWidth: isLast ? 0 : 1,
-    },
-    label: {
-      fontSize: 16,
-    },
-  });

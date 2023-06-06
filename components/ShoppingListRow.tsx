@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
-import React, { useMemo } from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
-import { Text } from 'tamagui';
+import React from 'react';
+import { TouchableOpacity } from 'react-native';
+import { Text, XStack } from 'tamagui';
 import Entypoicons from '@expo/vector-icons/Entypo';
 
 type Props = {
@@ -19,49 +19,37 @@ export default function ShoppingListRow({
   title,
   count,
 }: Props) {
-  const styles = useMemo(() => getStyles(isFirst, isLast), [isFirst, isLast]);
   const router = useRouter();
+
+  const bottomBorderRadius = isLast ? 8 : undefined;
+  const topBorderRadius = isFirst ? 8 : undefined;
 
   return (
     <TouchableOpacity
-      style={styles.container}
       onPress={() => {
         router.push({ pathname: listId });
       }}
     >
-      <Text fontSize="$5">{title}</Text>
-      <View style={styles.right}>
-        <Text fontSize="$3">{count}</Text>
-        <Entypoicons name="chevron-small-right" size={24} color={'gray'} />
-      </View>
+      <XStack
+        jc="space-between"
+        bc="$background"
+        bbrr={bottomBorderRadius}
+        bblr={bottomBorderRadius}
+        btlr={topBorderRadius}
+        btrr={topBorderRadius}
+        px="$3"
+        py="$3"
+      >
+        <Text fontSize="$5">{title}</Text>
+        <XStack ai="center">
+          <Text fontSize="$3" col="$gray10">
+            {count}
+          </Text>
+          <Text col="$gray10">
+            <Entypoicons name="chevron-small-right" size={24} />
+          </Text>
+        </XStack>
+      </XStack>
     </TouchableOpacity>
   );
 }
-
-const getStyles = (isFirst: boolean, isLast: boolean) =>
-  StyleSheet.create({
-    container: {
-      alignItems: 'center',
-      backgroundColor: 'white',
-      borderBottomColor: 'silver',
-      borderBottomLeftRadius: isLast ? 8 : undefined,
-      borderBottomRightRadius: isLast ? 8 : undefined,
-      borderBottomWidth: isLast ? 0 : 1,
-      borderTopLeftRadius: isFirst ? 8 : undefined,
-      borderTopRightRadius: isFirst ? 8 : undefined,
-      flexDirection: 'row',
-      justifyContent: 'space-between',
-      paddingHorizontal: 10,
-      paddingVertical: 8,
-    },
-    label: {
-      fontSize: 16,
-    },
-    right: {
-      alignItems: 'center',
-      flexDirection: 'row',
-    },
-    count: {
-      color: 'grey',
-    },
-  });

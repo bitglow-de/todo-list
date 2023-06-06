@@ -1,14 +1,7 @@
 import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useRef, useState } from 'react';
-import { Text } from 'tamagui';
-import {
-  TouchableOpacity,
-  StyleSheet,
-  View,
-  TextInput,
-  FlatList,
-  Keyboard,
-} from 'react-native';
+import { Input, Separator, Text, XStack, YStack, useTheme } from 'tamagui';
+import { TouchableOpacity, FlatList, Keyboard } from 'react-native';
 import { ListItem, useList } from '../state/listContext';
 import BottomSheet, { BottomSheetBackdrop } from '@gorhom/bottom-sheet';
 import ListRow from '../components/ListRow';
@@ -18,6 +11,8 @@ export default function Detail() {
   const { listId } = useLocalSearchParams();
   const [state, dispatch] = useList();
   const [value, setValue] = useState('');
+  const theme = useTheme();
+  const backgroundColor = theme.background.val;
 
   const renderBackdrop = useCallback(
     (props) => (
@@ -29,6 +24,7 @@ export default function Detail() {
     ),
     [],
   );
+  const renderSeparator = useCallback(() => <Separator />, []);
 
   const renderAddButton = (): React.ReactNode => {
     return (
@@ -58,40 +54,46 @@ export default function Detail() {
           headerRight: renderAddButton,
         }}
       />
-      <FlatList
-        data={listData}
-        renderItem={({ item, index }) => (
-          <ListRow item={item} isLast={index === listData.length - 1} />
-        )}
-        contentContainerStyle={styles.list}
-      />
+      <YStack flex={1} px="$2.5" py="$4">
+        <FlatList
+          data={listData}
+          renderItem={({ item, index }) => (
+            <ListRow
+              item={item}
+              isFirst={index === 0}
+              isLast={index === listData.length - 1}
+            />
+          )}
+          ItemSeparatorComponent={renderSeparator}
+        />
+      </YStack>
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         snapPoints={['65%']}
         animateOnMount={false}
         backdropComponent={renderBackdrop}
+        backgroundStyle={{ backgroundColor }}
       >
-        <View style={styles.bottomSheet}>
-          <View style={styles.bottomSheetActionsContainer}>
-            <TouchableOpacity
+        <YStack px="$2.5" flex={1}>
+          <XStack jc="space-between" ai="center">
+            <Text
               onPress={() => {
                 bottomSheetRef.current.close();
                 Keyboard.dismiss();
               }}
             >
-              <Text>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.divider} />
-          <TextInput
-            style={styles.textInput}
+              Cancel
+            </Text>
+          </XStack>
+          <Separator mt="$3" />
+          <Input
+            mt="$4"
             value={value}
             onChangeText={setValue}
             clearButtonMode="always"
             onSubmitEditing={() => {
               bottomSheetRef.current.close();
-
               if (value) {
                 dispatch({
                   type: 'ADD_ITEM',
@@ -102,32 +104,8 @@ export default function Detail() {
             }}
             returnKeyType="done"
           />
-        </View>
+        </YStack>
       </BottomSheet>
     </>
   );
 }
-
-const styles = StyleSheet.create({
-  bottomSheet: { paddingHorizontal: 15 },
-  bottomSheetActionsContainer: {
-    alignItems: 'center',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 10,
-  },
-  divider: { borderBottomWidth: 1, borderBottomColor: 'silver' },
-  textInput: {
-    backgroundColor: 'silver',
-    borderRadius: 4,
-    fontSize: 16,
-    marginTop: 10,
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-  },
-  list: {
-    backgroundColor: 'white',
-    borderRadius: 8,
-    margin: 15,
-  },
-});

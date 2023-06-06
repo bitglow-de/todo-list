@@ -1,6 +1,10 @@
 import React from 'react';
 import { useColorScheme } from 'react-native';
-
+import {
+  ThemeProvider as NavigationThemeProvider,
+  DefaultTheme,
+  DarkTheme,
+} from '@react-navigation/native';
 import config from '../tamagui.config';
 import { TamaguiProvider, Theme } from 'tamagui';
 import { useFonts } from 'expo-font';
@@ -22,8 +26,14 @@ export default function ThemeProvider({
   }
 
   return (
-    <TamaguiProvider config={config}>
-      <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>{children}</Theme>
-    </TamaguiProvider>
+    <NavigationThemeProvider
+      value={colorScheme === 'light' ? DefaultTheme : DarkTheme}
+    >
+      <TamaguiProvider config={config}>
+        <Theme name={colorScheme === 'dark' ? 'dark' : 'light'}>
+          {children}
+        </Theme>
+      </TamaguiProvider>
+    </NavigationThemeProvider>
   );
 }

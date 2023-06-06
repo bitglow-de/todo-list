@@ -1,19 +1,21 @@
-import React from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
+import React, { useCallback } from 'react';
+import { FlatList } from 'react-native';
 import { useList } from '../state/listContext';
 import ShoppingListRow from '../components/ShoppingListRow';
-import { H3 } from 'tamagui';
+import { H3, Separator, YStack } from 'tamagui';
 
 export default function Home() {
   const [state] = useList();
-
   const listIds = Object.keys(state);
+
+  const renderSeparator = useCallback(() => <Separator />, []);
+
   return (
-    <View style={styles.container}>
+    <YStack flex={1} px="$2.5" py="$4">
       <FlatList
         data={listIds}
-        contentContainerStyle={styles.list}
         ListHeaderComponent={<H3>{'Todo List App 📝'}</H3>}
+        ItemSeparatorComponent={renderSeparator}
         renderItem={({ item: listId, index }) => (
           <ShoppingListRow
             listId={listId}
@@ -24,21 +26,6 @@ export default function Home() {
           />
         )}
       />
-    </View>
+    </YStack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 15,
-    marginTop: 5,
-  },
-  list: {
-    margin: 15,
-  },
-});
